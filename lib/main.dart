@@ -2,7 +2,14 @@ import 'package:flutter/material.dart';
 
 void main() {
   runApp(const MyApp());
+  func1("pattern1", 1);
+  func4("pattern4", 20);
 }
+void func1(String? param1, int? param2) {
+  var result = '$param1 / $param2';
+  print(result);
+}
+void func4(String? param1, int param2) => print('$param1 / $param2');
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
