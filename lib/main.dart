@@ -2,14 +2,7 @@ import 'package:flutter/material.dart';
 
 void main() {
   runApp(const MyApp());
-  func1("pattern1", 1);
-  func4("pattern4", 20);
 }
-void func1(String? param1, int? param2) {
-  var result = '$param1 / $param2';
-  print(result);
-}
-void func4(String? param1, int param2) => print('$param1 / $param2');
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -56,7 +49,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
-
+  String _type = "偶数";
   void _incrementCounter() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
@@ -65,6 +58,12 @@ class _MyHomePageState extends State<MyHomePage> {
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
       _counter++;
+      if(_counter % 2 == 0) {
+        _type = "偶数";
+      }
+      else {
+        _type = "奇数";
+      }
     });
   }
 
@@ -86,38 +85,33 @@ class _MyHomePageState extends State<MyHomePage> {
         ]),
       ),
         drawer: Drawer(child: Center(child: Text("Drawer"))),
-      body: Column(children: [
-        Text("初めてのテキスト"),
-        Text("2番目のテキスト"),
-          TextButton(
-            onPressed: () => {print("ボタンがおされたよ")},
-            child: Text("更新"),
-          ),
-          Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children:[
-                  Icon(
-                    Icons.favorite,
-                    color: Colors.pink,
-                    size: 24.0,
-                  ),
-                  Icon(
-                    Icons.audiotrack,
-                    color: Colors.green,
-                    size: 30.0,
-                  ),
-                  Icon(
-                    Icons.beach_access,
-                    color: Colors.blue,
-                    size: 26.0,
-                  ),
-                ],
-              ),
-        ]),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () => {print("おしたね?")},
-          child: Icon(Icons.timer),
-        ), 
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              "You have pushed the button this many times;",
+            ),
+            Text(
+              '$_counter',
+              style: Theme.of(context).textTheme.headline4,
+            ),
+            if(_counter % 2 == 0)
+              Text("even", style: TextStyle(fontSize: 20, color: Colors.red)),
+            if(_counter % 2 == 1)
+              Text("odd", style: TextStyle(fontSize: 20, color: Colors.red)),
+            Text(
+              '$_type',
+              style: TextStyle(fontSize: 20, color: Colors.red)
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _incrementCounter,
+        tooltip: 'Increment',
+        child: Icon(Icons.add),
+      ),
       );
   }
 }
