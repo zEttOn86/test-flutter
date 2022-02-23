@@ -1,7 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void main() {
   runApp(const MyApp());
+}
+
+saveFlag(bool flag) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setBool('FLAG', flag);
+}
+loadFlag() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getBool('FLAG') ?? false;
 }
 
 class MyApp extends StatelessWidget {
@@ -77,41 +88,18 @@ class _MyHomePageState extends State<MyHomePage> {
     // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Row(children: [
-          Icon(Icons.create),
-          Text("初めてのタイトル"),
-        ]),
+        title: Text(widget.title),
       ),
-        drawer: Drawer(child: Center(child: Text("Drawer"))),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              "You have pushed the button this many times;",
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-            if(_counter % 2 == 0)
-              Text("even", style: TextStyle(fontSize: 20, color: Colors.red)),
-            if(_counter % 2 == 1)
-              Text("odd", style: TextStyle(fontSize: 20, color: Colors.red)),
-            Text(
-              '$_type',
-              style: TextStyle(fontSize: 20, color: Colors.red)
-            ),
-          ],
+        child: IconButton(
+          icon: Icon(Icons.open_in_browser),
+          onPressed: () async {
+            String url = Uri.encodeFull("https://www.google.co.jp");
+            if(await canLaunch(url)){
+              await launch(url);
+            }
+          }),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ),
       );
   }
 }
