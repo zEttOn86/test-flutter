@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:test_flutter/TestPage1.dart';
 import 'package:test_flutter/TestPage2.dart';
 import 'package:test_flutter/TestPage3.dart';
-
+import 'dart:ui';
 
 void main() {
   runApp(const MyApp());
@@ -21,11 +21,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
-      routes: {
-        "/test1": (BuildContext context) => TestPage1(),
-        "/test2": (BuildContext context) => TestPage2(),
-        "/test3": (BuildContext context) => TestPage3(),
-      },
+      scrollBehavior: AppScrollBehavior(),
     );
   }
 }
@@ -40,6 +36,32 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  late PageController _pageController;
+  int _selectedIndex = 0;
+
+  var _pages = [
+    TestPage1(),
+    TestPage2(),
+    TestPage3(),
+  ];
+  @override
+  void initState(){
+    super.initState();
+    _pageController = PageController(initialPage: _selectedIndex);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _pageController.dispose();
+  }
+
+  void _onPageChanged(int index){
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -48,6 +70,20 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    return Scaffold(body: TestPage1());
+    return Scaffold(
+      body: PageView(
+        controller: _pageController,
+        onPageChanged: _onPageChanged,
+        children: _pages,
+      )
+    );
   }
+}
+
+class AppScrollBehavior extends MaterialScrollBehavior {
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+        PointerDeviceKind.touch,
+        PointerDeviceKind.mouse,
+      };
 }
