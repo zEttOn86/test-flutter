@@ -21,7 +21,6 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
-      scrollBehavior: AppScrollBehavior(),
     );
   }
 }
@@ -35,33 +34,15 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  late PageController _pageController;
-  int _selectedIndex = 0;
+class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
+  bool flag = false;
 
-  var _pages = [
-    TestPage1(),
-    TestPage2(),
-    TestPage3(),
-  ];
-  @override
-  void initState(){
-    super.initState();
-    _pageController = PageController(initialPage: _selectedIndex);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _pageController.dispose();
-  }
-
-  void _onPageChanged(int index){
+  _click() async {
     setState(() {
-      _selectedIndex = index;
+      flag = !flag;
     });
   }
-
+  
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -71,19 +52,51 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      body: PageView(
-        controller: _pageController,
-        onPageChanged: _onPageChanged,
-        children: _pages,
-      )
+      appBar: AppBar(
+        title: Text(widget.title!),
+      ),
+      body: Center(
+        child: Column(
+          children: <Widget>[
+            AnimatedOpacity(
+              opacity: flag ? 0.1 : 1.0, 
+              duration: Duration(seconds: 3),
+              child: Text(
+                "消える文字",
+                style: Theme.of(context).textTheme.headline4,
+              ),
+            ),
+            AnimatedSize(
+              vsync: this,
+              duration: Duration(seconds: 3),
+              child: SizedBox(
+                width: flag ? 50 : 200,
+                height: flag ? 50 : 200,
+                child: Container(color: Colors.purple),
+              ),
+            ),
+            AnimatedAlign(
+              alignment: flag ? Alignment.topLeft : Alignment.bottomRight, 
+              duration: Duration(seconds: 3),
+              child: SizedBox(
+                width: 50,
+                height: 50,
+                child: Container(color: Colors.green),
+              ),
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton:
+              Row(
+                mainAxisAlignment:MainAxisAlignment.end,
+                children:[
+                  FloatingActionButton(
+                    onPressed: _click,
+                    child: Icon(Icons.add),
+                  ),
+                ],
+              ),
     );
   }
-}
-
-class AppScrollBehavior extends MaterialScrollBehavior {
-  @override
-  Set<PointerDeviceKind> get dragDevices => {
-        PointerDeviceKind.touch,
-        PointerDeviceKind.mouse,
-      };
 }
