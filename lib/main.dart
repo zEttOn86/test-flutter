@@ -34,7 +34,7 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
+class _MyHomePageState extends State<MyHomePage> {
   bool flag = false;
 
   _click() async {
@@ -45,44 +45,25 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title!),
+        title: Text(widget.title),
       ),
       body: Center(
         child: Column(
           children: <Widget>[
-            AnimatedOpacity(
-              opacity: flag ? 0.1 : 1.0, 
+            AnimatedContainer(
               duration: Duration(seconds: 3),
-              child: Text(
-                "消える文字",
-                style: Theme.of(context).textTheme.headline4,
-              ),
+              width: flag ? 100 : 50,
+              height: flag ? 50 : 100,
+              padding: flag ? EdgeInsets.all(0) : EdgeInsets.all(30), 
+              margin: flag ? EdgeInsets.all(0) : EdgeInsets.all(30),
+              transform: flag ? Matrix4.skewX(0.0) : Matrix4.skewX(0.3),
+              color: flag ? Colors.blue : Colors.grey
             ),
-            AnimatedSize(
-              vsync: this,
+            AnimatedSwitcher(
               duration: Duration(seconds: 3),
-              child: SizedBox(
-                width: flag ? 50 : 200,
-                height: flag ? 50 : 200,
-                child: Container(color: Colors.purple),
-              ),
-            ),
-            AnimatedAlign(
-              alignment: flag ? Alignment.topLeft : Alignment.bottomRight, 
-              duration: Duration(seconds: 3),
-              child: SizedBox(
-                width: 50,
-                height: 50,
-                child: Container(color: Colors.green),
-              ),
+              child : flag ? Text("何もない") : Icon(Icons.favorite, color: Colors.pink),
             ),
           ],
         ),
